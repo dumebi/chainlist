@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <title>ChainList from ChainSkills</title>
+  <title>Comflo from ChainSkills</title>
 
   <!-- Bootstrap -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -27,7 +27,7 @@
 <body>
   <div class="container">
     <div class="jumbotron text-center">
-      <h1>ChainList</h1>
+      <h1>Comflo</h1>
     </div>
 
     <div class="col-md-12" id="article-list">
@@ -41,9 +41,13 @@
       <div class="row panel panel-default">
         <div class="panel-heading clearfix">
           <div class="panel-title">
+            <button class="btn btn-info btn-lg pull-left" data-toggle="collapse" data-target="#events" aria-expanded="false" aria-controls="events">Events</button>
             <button class="btn btn-info btn-lg pull-right" data-toggle="modal" data-target="#sellArticle">Sell an article</button>
           </div>
         </div>
+        <ul id="events" class="collapse list-group">
+
+        </ul>
       </div>
 
       <div id="articlesRow" class="row">
@@ -100,7 +104,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary btn-success" data-dismiss="modal" onclick="">Submit</button>
+          <button type="button" class="btn btn-primary btn-success" data-dismiss="modal" onclick="App.sellArticle(); return false;">Submit</button>
           <button type="button" class="btn" data-dismiss="modal">Close</button>
         </div>
       </div>
@@ -111,7 +115,7 @@
   <div id="footer" class="container">
     <nav class="navbar navbar-default navbar-fixed-bottom">
       <div class="navbar-inner navbar-content-center text-center">
-        <p class="text-muted" credit><a href="http://chainskills.com">ChainSkills</a> - &copy; 2017 - <a href="https://twitter.com/sarbogast">Sebastien Arbogast</a> and <a href="https://twitter.com/eloudsa">Said Eloudrhiri</a></p>
+        <p class="text-muted" credit><a href="http://chainskills.com">Comflo</a> - &copy; 2017 </p>
       </div>
     </nav>
   </div>
