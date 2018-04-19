@@ -1,21 +1,30 @@
 pragma solidity ^0.4.18;
 
 contract Chainlist {
+  // custom types
+  struct Article {
+    uint id;
+    address seller;
+    address buyer;
+    string name;
+    string description;
+    uint256 price;
+  }
+
   // state variables
-  address seller;
-  address buyer;
-  string name;
-  string description;
-  uint256 price;
+  mapping (uint => Article) public articles;
+  uint articleCounter;
 
   // events
   event LogSellArticle(
+    uint indexed _id,
     address indexed _seller,
     string _name,
     uint256 _price
     );
 
   event LogBuyArticle(
+    uint indexed _id,
     address indexed _seller,
     address indexed _buyer,
     string _name,
@@ -28,44 +37,91 @@ contract Chainlist {
   } */
   // sell an article
   function sellArticle(string _name, string _description, uint256 _price) public {
-    seller = msg.sender;
+    /* seller = msg.sender;
     name = _name;
     description = _description;
-    price = _price;
+    price = _price; */
 
-    LogSellArticle(seller, name, price);
+    articleCounter++;
+
+    // storing this article
+    articles[articleCounter] = Article(
+      articleCounter,
+      msg.sender,
+      0x0,
+      _name,
+      _description,
+      _price
+      );
+
+    LogSellArticle(articleCounter, msg.sender, _name, _price);
   }
 
   // get an sellArticle
-  function getArticle() public view returns(
+  /* function getArticle() public view returns(
     address _seller,
     address _buyer,
     string _name,
     string _description,
     uint256 _price) {
       return(seller, buyer, name, description, price);
+  } */
+
+  // fetch and return all article IDs for articles still for sale
+  function getArticlesForSale() public view returns(uint[]) {
+    // prepare output array
+    uint[] memory articleIds = new uint[](articleCounter);
+
+    uint numberOfArticlesForSale = 0;
+    for(uint i = 1; i <= articleCounter; i++){
+      // keep the ID if the article is stil for sale
+      if(articles[i].buyer == 0x0){
+        articleIds[numberOfArticlesForSale] = articles[i].id;
+        numberOfArticlesForSale++;
+      }
+    }
+
+    // copy the articleIds array into a smaller forSale array
+    uint[] memory forSale = new uint[](numberOfArticlesForSale);
+    for(uint j = 0; j < numberOfArticlesForSale; j++){
+      // keep the ID if the article is stil for sale
+      forSale[j] = articleIds[j];
+    }
+
+    return forSale;
+  }
+
+  // gets the number of articles
+  function getNoOfArticles() public view returns(uint) {
+    return articleCounter;
   }
 
   // Buy an articles
-  function buyArticle() payable public {
-    // we check if there is an article for sale
-    require(seller != 0x0);
+  function buyArticle(uint _id) payable public {
+    // we check if there are articles for sale
+    require(articleCounter > 0);
+
+    // we check that the article exists
+    require(_id > 0 && _id <= articleCounter);
+
+    // retrieve the article from the mapping
+    Article storage article = articles[_id];
 
     // check that the article has ot been sold yet
-    require(buyer == 0x0);
+    require(article.buyer == 0x0);
 
     // Dont allow seller to buy its own article
-    require(seller != msg.sender);
+    require(article.seller != msg.sender);
 
     // Value sent corresponds to price of article
-    require(msg.value == price);
+    require(msg.value == article.price);
 
     // keep buyer's info
-    buyer = msg.sender;
+    article.buyer = msg.sender;
 
     // buyer can pay sender
-    seller.transfer(msg.value);
+    article.seller.transfer(msg.value);
 
-    LogBuyArticle(seller, buyer, name, price);
+    LogBuyArticle(_id, article.seller, article.buyer, article.name, article.price);
   }
 }
