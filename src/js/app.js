@@ -2,6 +2,7 @@ App = {
   web3Provider: null,
   contracts: {},
   account: 0x0,
+  loading: false,
 
   init: function() {
     return App.initWeb3();
@@ -51,53 +52,33 @@ App = {
   },
 
   reloadArticles: function() {
+    // avoid re-entry
+    if(App.loading){
+      return
+    }
+    App.loading = true
     // refresh account information because the balance might have changed
     App.displayAccountInfo();
 
-    // retrieve the article placeholder and clear it
-    $('#articlesRow').empty();
-    $('#articlesRow').empty();
+    var chainListInstance;
 
     App.contracts.ChainList.deployed().then(function(instance) {
-      return instance.getArticle();
-    }).then(function(article) {
-      if(article[0] == 0x0) {
-        // no article
-        return;
+      chainListInstance =  instance;
+      return chainListInstance.getArticlesForSale();
+    }).then(function(articleIds) {
+      $('#articlesRow').empty();
+      for(var i = 0; i < articleIds.length; i++){
+        var articleID = articleIds[i];
+        chainListInstance.articles(articleID.toNumber())
+        .then(function(article) {
+          App.displayArticle(article[0], article[1], article[3], article[4], article[5] )
+        });
       }
 
-      var price  = web3.fromWei(article[4], "ether")
-      // retrieve the article template and fill it
-      var articleTemplate = $('#articleTemplate');
-      articleTemplate.find('.panel-title').text(article[2]);
-      articleTemplate.find('.article-description').text(article[3]);
-      articleTemplate.find('.article-price').text(price);
-      articleTemplate.find('.btn-buy').attr('data-value', price);
-
-      var seller = article[0];
-      if (seller == App.account) {
-        seller = "You";
-      }
-      articleTemplate.find('.article-seller').text(seller);
-      // buyer
-      var buyer = article[1];
-      if (buyer == App.account) {
-        buyer = "You";
-      } else if (buyer == 0x0){
-       buyer = "None yet"
-      }
-      articleTemplate.find('.article-buyer').text(buyer);
-
-      if(article[0] == App.account || article[1] != 0x0){
-        articleTemplate.find('.btn-buy').hide();
-      } else {
-        articleTemplate.find('.btn-buy').show();
-      }
-
-      // add this article
-      $('#articlesRow').append(articleTemplate.html());
+      App.loading = false;
     }).catch(function(err) {
       console.error(err.message);
+      App.loading = false;
     });
   },
 
@@ -122,6 +103,36 @@ App = {
     }).catch(function(err) {
       console.error(err);
     });
+  },
+
+  displayArticle: function(id, seller, name, description, price){
+    var articlesRow = $('#articlesRow');
+    var etherPrice = web3.fromWei(price, "ether");
+    // retrieve the article template and fill it
+    var articleTemplate = $('#articleTemplate');
+    articleTemplate.find('.panel-title').text(name);
+    articleTemplate.find('.article-description').text(description);
+    articleTemplate.find('.article-price').text(etherPrice);
+    articleTemplate.find('.btn-buy').attr('data-value', etherPrice);
+    articleTemplate.find('.btn-buy').attr('data-id', id);
+
+    if (seller == App.account) {
+      articleTemplate.find('.article-seller').text("You");
+      articleTemplate.find('.btn-buy').hide();
+    } else {
+      articleTemplate.find('.article-seller').text(seller);
+      articleTemplate.find('.btn-buy').show();
+    }
+    // buyer
+    // var buyer = article[1];
+    // if (buyer == App.account) {
+    //   buyer = "You";
+    // } else if (buyer == 0x0){
+    //  buyer = "None yet"
+    // }
+    // articleTemplate.find('.article-buyer').text(buyer);
+    // add this article
+    $('#articlesRow').append(articleTemplate.html());
   },
 
   // listen to events triggered by the contract
@@ -152,8 +163,9 @@ App = {
     event.preventDefault();
     // retrieve article Price
     var price = parseFloat($(event.target).data('value'));
+    var articleID = parseFloat($(event.target).data('id'));
     App.contracts.ChainList.deployed().then(function(instance) {
-      return instance.buyArticle({
+      return instance.buyArticle(articleID, {
         from: App.account,
         value: web3.toWei(price, "ether"),
         gas:500000

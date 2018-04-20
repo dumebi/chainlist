@@ -5,9 +5,9 @@ contract('Chainlist', function(accounts) {
   var chainListInstance;
   var seller = accounts[1];
   var buyer = accounts[2];
-  var articleName = "article 1";
-  var articleDesc = "Desc for article 1";
-  var articlePrice = 10;
+  var articleName1 = "article 1";
+  var articleDesc1 = "Desc for article 1";
+  var articlePrice1 = 10;
   var sellerBalanceBeforeBuy, sellerBalanceAfterBuy;
   var buyerBalanceBeforeBuy, buyerBalanceAfterBuy;
 
@@ -15,18 +15,36 @@ contract('Chainlist', function(accounts) {
   it("should throw an exception if you try to buy an article when there is no article for sale yet", function() {
     return Chainlist.deployed().then(function(instance){
       chainListInstance = instance;
-      return chainListInstance.buyArticle({from: buyer, value: web3.toWei(articlePrice, "ether")})
+      return chainListInstance.buyArticle(1, {from: buyer, value: web3.toWei(articlePrice1, "ether")})
     }).then(assert.fail)
     .catch(function(err) {
       assert(true);
     }).then(function() {
-      return chainListInstance.getArticle();
+      return chainListInstance.getNoOfArticles();
     }).then(function(article) {
-      assert.equal(article[0], 0x0, "seller must be empty");
-      assert.equal(article[1], 0x0, "buyer must be empty");
-      assert.equal(article[2], "", "name must be empty");
-      assert.equal(article[3], "", "description must be empty");
-      assert.equal(article[4].toNumber(), 0, "price must be 0");
+      assert.equal(article.toNumber(), 0, "Number of articles must be "+ 0);
+    });
+  });
+
+  // buy an article that does not exist
+  it("should throw an exception if you try to buy an article that does not exist", function() {
+    return Chainlist.deployed().then(function(instance){
+      chainListInstance = instance;
+      return chainListInstance.sellArticle(articleName1, articleDesc1, web3.toWei(articlePrice1, "ether"), {from: seller})
+    }).then(function(receipt) {
+      return chainListInstance.buyArticle(2, {from: seller, value: web3.toWei(articlePrice1, "ether")})
+    }).then(assert.fail)
+    .catch(function(err) {
+      assert(true);
+    }).then(function() {
+      return chainListInstance.articles(1);
+    }).then(function(article) {
+      assert.equal(article[0].toNumber(), 1, "Article ID must be "+ 1);
+      assert.equal(article[1], seller, "article seller must be " + seller);
+      assert.equal(article[2], 0x0, "article buyer must be empty");
+      assert.equal(article[3], articleName1, "article name must be " + articleName1);
+      assert.equal(article[4], articleDesc1, "article description must be " + articleDesc1);
+      assert.equal(article[5].toNumber(), web3.toWei(articlePrice1, "ether"), "article price must be " + web3.toWei(articlePrice1, "ether"));
     });
   });
 
@@ -34,20 +52,19 @@ contract('Chainlist', function(accounts) {
   it("should throw an exception if you try to buy your own article", function() {
     return Chainlist.deployed().then(function(instance){
       chainListInstance = instance;
-      return chainListInstance.sellArticle(articleName, articleDesc, web3.toWei(articlePrice, "ether"), {from: seller})
-    }).then(function(receipt) {
-      return chainListInstance.buyArticle({from: seller, value: web3.toWei(articlePrice, "ether")})
+      return chainListInstance.buyArticle(1, {from: seller, value: web3.toWei(articlePrice1, "ether")})
     }).then(assert.fail)
     .catch(function(err) {
       assert(true);
     }).then(function() {
-      return chainListInstance.getArticle();
+      return chainListInstance.articles(1);
     }).then(function(article) {
-      assert.equal(article[0], seller, "seller must be"+ seller);
-      assert.equal(article[1], 0x0, "buyer must be empty");
-      assert.equal(article[2], articleName, "name must be "+ articleName);
-      assert.equal(article[3], articleDesc, "description must be "+ articleDesc);
-      assert.equal(article[4].toNumber(), web3.toWei(articlePrice, "ether"), "price must be"+ web3.toWei(articlePrice, "ether"));
+      assert.equal(article[0].toNumber(), 1, "Article ID must be "+ 1);
+      assert.equal(article[1], seller, "article seller must be " + seller);
+      assert.equal(article[2], 0x0, "article buyer must be empty");
+      assert.equal(article[3], articleName1, "article name must be " + articleName1);
+      assert.equal(article[4], articleDesc1, "article description must be " + articleDesc1);
+      assert.equal(article[5].toNumber(), web3.toWei(articlePrice1, "ether"), "article price must be " + web3.toWei(articlePrice1, "ether"));
     });
   });
 
@@ -55,18 +72,19 @@ contract('Chainlist', function(accounts) {
   it("should throw an exception if you try to buy an article for a different price ", function() {
     return Chainlist.deployed().then(function(instance){
       chainListInstance = instance;
-      return chainListInstance.buyArticle({from: buyer, value: web3.toWei(articlePrice - 5, "ether")})
+      return chainListInstance.buyArticle(1, {from: buyer, value: web3.toWei(articlePrice - 5, "ether")})
     }).then(assert.fail)
     .catch(function(err) {
       assert(true);
     }).then(function() {
-      return chainListInstance.getArticle();
+      return chainListInstance.articles(1);
     }).then(function(article) {
-      assert.equal(article[0], seller, "seller must be"+ seller);
-      assert.equal(article[1], 0x0, "buyer must be empty");
-      assert.equal(article[2], articleName, "name must be "+ articleName);
-      assert.equal(article[3], articleDesc, "description must be "+ articleDesc);
-      assert.equal(article[4].toNumber(), web3.toWei(articlePrice, "ether"), "price must be"+ web3.toWei(articlePrice, "ether"));
+      assert.equal(article[0].toNumber(), 1, "Article ID must be "+ 1);
+      assert.equal(article[1], seller, "article seller must be " + seller);
+      assert.equal(article[2], 0x0, "article buyer must be empty");
+      assert.equal(article[3], articleName1, "article name must be " + articleName1);
+      assert.equal(article[4], articleDesc1, "article description must be " + articleDesc1);
+      assert.equal(article[5].toNumber(), web3.toWei(articlePrice1, "ether"), "article price must be " + web3.toWei(articlePrice1, "ether"));
     });
   });
 
@@ -74,20 +92,21 @@ contract('Chainlist', function(accounts) {
   it("should throw an exception if you try to buy an article that has already been sold ", function() {
     return Chainlist.deployed().then(function(instance){
       chainListInstance = instance;
-      return chainListInstance.buyArticle({from: buyer, value: web3.toWei(articlePrice, "ether")})
+      return chainListInstance.buyArticle(1, {from: buyer, value: web3.toWei(articlePrice, "ether")})
     }).then(function(){
-      return chainListInstance.buyArticle({from: buyer, value: web3.toWei(articlePrice - 5, "ether")})
+      return chainListInstance.buyArticle(1, {from: web3.eth.accounts[0], value: web3.toWei(articlePrice, "ether")})
     }).then(assert.fail)
     .catch(function(err) {
       assert(true);
     }).then(function() {
-      return chainListInstance.getArticle();
+      return chainListInstance.articles(1);
     }).then(function(article) {
-      assert.equal(article[0], seller, "seller must be "+ seller);
-      assert.equal(article[1], buyer, "buyer must be "+buyer);
-      assert.equal(article[2], articleName, "name must be "+ articleName);
-      assert.equal(article[3], articleDesc, "description must be "+ articleDesc);
-      assert.equal(article[4].toNumber(), web3.toWei(articlePrice, "ether"), "price must be"+ web3.toWei(articlePrice, "ether"));
+      assert.equal(article[0].toNumber(), 1, "Article ID must be "+ 1);
+      assert.equal(article[1], seller, "article seller must be " + seller);
+      assert.equal(article[2], 0x0, "article buyer must be empty");
+      assert.equal(article[3], articleName1, "article name must be " + articleName1);
+      assert.equal(article[4], articleDesc1, "article description must be " + articleDesc1);
+      assert.equal(article[5].toNumber(), web3.toWei(articlePrice1, "ether"), "article price must be " + web3.toWei(articlePrice1, "ether"));
     });
   });
 
