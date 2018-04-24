@@ -220,7 +220,7 @@ app.post('/login', (r, s, n) => {
 
 
 app.use(require('connect-history-api-fallback')())
-app.use(serveStatic(__dirname + "/dist"));
-var port = process.env.PORT || 5000;
+app.use(serveStatic(__dirname + "/docs"));
+const port = process.env.PORT || 5000;
 app.listen(port);
 console.log('server started '+ port);
