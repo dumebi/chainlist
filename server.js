@@ -12,6 +12,7 @@ let MONGO_DB = "mongodb://dikejude49:dyke2010@ds143388.mlab.com:43388/comflo";
 let options = { promiseLibrary: require('bluebird'), keepAlive: true };
 mongoose.Promise = require('bluebird');
 mongoose.connect(MONGO_DB, options);
+let routes = require('./routes/index');
 
 
 const bodyParser = require('body-parser')
@@ -38,6 +39,112 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
+}));
+app.set('view engine', 'hbs');
+app.engine('.hbs', expressHbs({
+    defaultLayout: 'layout',
+    extname: '.hbs',
+    helpers: {
+        locale: function (number, options) {
+            return Number(number).toLocaleString();
+        },
+        image: function (image, options) {
+            return image.replace("/uploads", "");
+        },
+        commalist: function (items, options) {
+            let out = '';
+
+            for (let i = 0, l = items.length; i < l; i++) {
+                out = out + options.fn(items[i]) + (i !== (l - 1) ? ", " : "");
+            }
+            return out;
+        },
+        mathPercentage: function (left, operator, right, options) {
+            let lvalue = parseFloat(left);
+            let rvalue = parseFloat(right);
+
+            switch (operator) {
+                case "+":
+                    return ((lvalue + rvalue) > 0) ? (lvalue + rvalue) : 0;
+                case "-":
+                    return ((lvalue - rvalue) > 0) ? (lvalue - rvalue) : 0;
+                case "*":
+                    return ((lvalue * rvalue) > 0) ? (lvalue * rvalue) : 0;
+                case "/":
+                    return ((lvalue / rvalue) > 0) ? (lvalue / rvalue) : 0;
+                case "%":
+                    return ((lvalue % rvalue) > 0) ? (lvalue / rvalue) : 0;
+                case "percent":
+                    return ((lvalue / rvalue) * 100 > 0) ? Math.round((lvalue / rvalue) * 100) : 0;
+                default:
+                    return options.inverse(this);
+            }
+        },
+        ifCond: function (v1, operator, v2, options) {
+            switch (operator) {
+                case '==':
+                    return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                case '===':
+                    return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                case '!=':
+                    return (v1 != v2) ? options.fn(this) : options.inverse(this);
+                case '!==':
+                    return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                case '<':
+                    return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                case '<=':
+                    return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                case '>':
+                    return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                case '>=':
+                    return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                case '&&':
+                    return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                case '||':
+                    return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                case 'contains':
+                    if(v1 == undefined || v1 == null || v1  == {}) {return options.inverse(this);}
+                    return (v1.indexOf(v2) !== -1 ) ? options.fn(this) : options.inverse(this);
+                case 'containsArray':
+                    if(v1 == undefined || v1 == null || v1  == {}) return options.inverse(this);
+                    for (let i = 0; i < v1.length; i += 1) {
+                        if (v1[i]["_id"].toString() === v2.toString()) {
+                            return options.fn(this);
+                        }
+                    }
+                    return options.inverse(this)
+                default:
+                    return options.inverse(this);
+            }
+        },
+        ifIn: function (elem, list, options) {
+            if (list.indexOf(elem) > -1) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        },
+        formatDate: function (date) {
+            return moment(date).format("YYYY-MM-DD");
+        },
+        year: function (date) {
+            return moment().year();
+        },
+        dateDiff: function (startdate, enddate) {
+            let startDate = moment(startdate);
+            let endDate = moment(enddate);
+
+            if (startdate == null) {
+                return "1"
+            } else {
+                return endDate.diff(startDate, 'days')
+            }
+        },
+        section: function(name, options){
+            if(!this._sections) this._sections = {};
+            this._sections[name] = options.fn(this);
+            return null;
+        }
+    }
 }));
 
 app.post('/request', (r, s, n) => {
@@ -218,6 +325,7 @@ app.post('/login', (r, s, n) => {
   });
 });
 
+app.use('/', routes);
 
 app.use(require('connect-history-api-fallback')())
 app.use(serveStatic(__dirname + "/docs"));
