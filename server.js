@@ -1,9 +1,13 @@
 const express = require('express');
 const path = require('path');
+const expressHbs = require('express-handlebars');
 const serveStatic = require('serve-static');
 const nodemailer = require('nodemailer');
 const randomstring = require("randomstring");
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const flash = require('connect-flash');
+const session = require('express-session');
+let MongoStore = require('connect-mongo')(session);
 const User = require('./models/user');
 const utils = require('./utils/utils');
 app = express();
@@ -40,6 +44,16 @@ app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
+app.use(session({
+    secret: 'mysupersecret',
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie: { maxAge: 1800 * 600 * 1000 },
+    secure: true
+}));
+app.use(flash());
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.engine('.hbs', expressHbs({
     defaultLayout: 'layout',
@@ -327,8 +341,11 @@ app.post('/login', (r, s, n) => {
 
 app.use('/', routes);
 
-app.use(require('connect-history-api-fallback')())
-app.use(serveStatic(__dirname + "/docs"));
+// app.use(require('connect-history-api-fallback')())
+// app.use(serveStatic(__dirname + "/docs"));
+app.use(express.static(path.join(__dirname, 'src')));
+app.use(express.static(path.join(__dirname, 'build/contracts')));
+app.use(express.static(path.join(__dirname, 'node_modules')));
 const port = process.env.PORT || 5000;
 app.listen(port);
 console.log('server started '+ port);

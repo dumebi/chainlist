@@ -2,6 +2,8 @@ App = {
   web3Provider: null,
   contracts: {},
   account: 0x0,
+  coinbase: '',
+  coinbase_amount: 0,
   loading: false,
 
   init: function() {
@@ -21,6 +23,8 @@ App = {
 
     App.displayAccountInfo();
 
+    App.getCoinbase();
+
     return App.initContract();
   },
 
@@ -36,6 +40,33 @@ App = {
         })
       }
     });
+  },
+
+  getCoinbase: function() {
+    web3.eth.getCoinbase(function(err, account) {
+      if(err === null) {
+        App.coinbase = account;
+        $('#account').text(account);
+        web3.eth.getBalance(account, function(err, balance) {
+          if(err === null) {
+            App.coinbase_amount = web3.fromWei(balance, "ether");
+          }
+        })
+      }
+    });
+  },
+
+  register: function() {
+    let address = "";
+    let email = $('#inputEmail');
+    let fname = $('#inputFname');
+    let lname = $('#inputLname');
+    let password = $('#inputPassword');
+      web3.personal.newAccount(password, function(err, data) {
+        if(err === null) {
+          console.log(data, data.address);
+        }
+      })
   },
 
   initContract: function() {
