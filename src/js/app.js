@@ -214,7 +214,9 @@ App = {
                 gas: 500000
             });
         }).then(function(result) {
-
+            $('#article_name').val("");
+            $('#article_description').val("");
+            $('#article_price').val("");
         }).catch(function(err) {
             console.error(err);
         });
