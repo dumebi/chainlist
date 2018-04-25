@@ -17,7 +17,7 @@ App = {
       App.web3Provider = web3.currentProvider;
     } else {
       //create a new provider and plug it directly into our local node
-      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
     }
     web3 = new Web3(App.web3Provider);
 
@@ -62,11 +62,16 @@ App = {
     let fname = $('#inputFname');
     let lname = $('#inputLname');
     let password = $('#inputPassword');
-      web3.personal.newAccount(password, function(err, data) {
-        if(err === null) {
-          console.log(data, data.address);
-        }
-      })
+    if(email.val() == "" || fname.val() == "" || lname.val() == "" || password.val() == ""){
+      return false;
+    }
+    web3.personal.newAccount(password, function(err, data) {
+      if(err === null) {
+        console.log(data);
+      } else {
+        return false;
+      }
+    })
   },
 
   initContract: function() {
