@@ -6,8 +6,8 @@
 <div class="col-md-12" id="article-list">
   <div class="row">
     <div class="col-lg-12">
-      <p id="account" class="welcome pull-right"></p>
-      <p id="accountBalance" class="welcome pull-left"></p>
+      <p id="account" class="welcome pull-right col-md-6 col-sm-12 text-right"></p>
+      <p id="accountBalance" class="welcome pull-left col-md-6 col-sm-12"></p>
     </div>
   </div>
 
@@ -15,6 +15,7 @@
     <div class="panel-heading clearfix">
       <div class="panel-title">
         <button class="btn btn-info btn-lg pull-left" data-toggle="collapse" data-target="#events" aria-expanded="false" aria-controls="events">Events</button>
+        <a style="color: #ffffff; margin-left: 3%;" href="/logout" class="btn btn-danger btn-lg pull-right">Logout</a>
         <button class="btn btn-info btn-lg pull-right" data-toggle="modal" data-target="#sellArticle">Sell an article</button>
       </div>
     </div>
@@ -97,3 +98,8 @@
 </nav>
 </div>
 
+<script>
+    $(document).ready(function() {
+        App.setAccount('{{user.address}}');
+    });
+</script>

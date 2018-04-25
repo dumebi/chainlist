@@ -10,7 +10,11 @@
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="button" onclick="App.login()">Sign in</button>
+
+        <button id="btnLogin" class="btn btn-lg btn-primary btn-block" type="button" onclick="App.login()">Sign in</button>
+        <div style="margin-top: 10px;" class="form-group text-center mt-3">
+            <a href="/register">Or Register</a>
+        </div>
     </form>
 
 </div> <!-- /container -->

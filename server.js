@@ -12,7 +12,7 @@ const User = require('./models/user');
 const utils = require('./utils/utils');
 app = express();
 
-let MONGO_DB = "mongodb://dikejude49:dyke2010@ds143388.mlab.com:43388/comflo";
+let MONGO_DB = "mongodb://dikejude49:dyke2010@ds155299.mlab.com:55299/blockchain";
 let options = { promiseLibrary: require('bluebird'), keepAlive: true };
 mongoose.Promise = require('bluebird');
 mongoose.connect(MONGO_DB, options);
@@ -175,10 +175,6 @@ app.post('/request', (r, s, n) => {
       else {
         let details = r.body;
         delete details["password"];
-        // let token = randomstring.generate({
-        //   length: 5,
-        //   charset: 'numeric'
-        // });
         let newUser = new User(details);
         newUser.password = newUser.encrypt(token);
         newUser
@@ -193,7 +189,7 @@ app.post('/request', (r, s, n) => {
                     <meta name="author" content="">
                     <title>Comflo Blockchain Demo Details</title>
                   </head>
-                
+
                   <body style="max-width: 600px;margin: 10px auto;padding: 70px;border: 1px solid #ccc;background: #ffffff;color: #4e4e4e;font-family: helvetica;">
                     <div>
                       <div style="margin-bottom: 3rem;">
@@ -319,25 +315,25 @@ app.post('/request', (r, s, n) => {
 
 
 // okpanachi.adaji@comflo.com
-app.post('/login', (r, s, n) => {
-  if (r.body.email == null || r.body.password == null)
-    return s.status(200).json({ status: "failed", err: "Some details were not supplied" });
-  let newUser = new User;
-  console.log(newUser.encrypt(r.body.password));
-  User.findOne({ email: r.body.email })
-    .then(user => {
-      if (!user) {return s.status(200).json({ status: 'failed', data: "User not found here" });}
-      else {
-        if (!user.validatePassword(r.body.password)) {
-          return s.status(200).json({ status: 'failed', data: "Wrong password" });
-        }
-        return s.status(200).json({ status: 'success', data: user });
-      }
-    }).catch(err => {
-      console.log(err)
-    return s.status(200).json({ status: 'failed', data: "User not found" });
-  });
-});
+// app.post('/login', (r, s, n) => {
+//   if (r.body.email == null || r.body.password == null)
+//     return s.status(200).json({ status: "failed", err: "Some details were not supplied" });
+//   let newUser = new User;
+//   console.log(newUser.encrypt(r.body.password));
+//   User.findOne({ email: r.body.email })
+//     .then(user => {
+//       if (!user) {return s.status(200).json({ status: 'failed', data: "User not found here" });}
+//       else {
+//         if (!user.validatePassword(r.body.password)) {
+//           return s.status(200).json({ status: 'failed', data: "Wrong password" });
+//         }
+//         return s.status(200).json({ status: 'success', data: user });
+//       }
+//     }).catch(err => {
+//       console.log(err)
+//     return s.status(200).json({ status: 'failed', data: "User not found" });
+//   });
+// });
 
 app.use('/', routes);
 

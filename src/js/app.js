@@ -2,7 +2,7 @@ App = {
   web3Provider: null,
   contracts: {},
   account: 0x0,
-  coinbase: '',
+  coinbase: 0x0,
   coinbase_amount: 0,
   loading: false,
 
@@ -21,25 +21,29 @@ App = {
     }
     web3 = new Web3(App.web3Provider);
 
-    App.displayAccountInfo();
-
     App.getCoinbase();
 
     return App.initContract();
   },
 
+  hostname: function() {
+    return window.location.origin;
+  },
+
+  setAccount: function (address) {
+    App.account = address;
+  },
+
   displayAccountInfo: function() {
-    web3.eth.getCoinbase(function(err, account) {
-      if(err === null) {
-        App.account = account;
-        $('#account').text(account);
-        web3.eth.getBalance(account, function(err, balance) {
+    // console.log(App);
+    if(App.account != 0){
+      $('#account').text(App.account);
+      web3.eth.getBalance(App.account, function(err, balance) {
           if(err === null) {
-            $('#accountBalance').text(web3.fromWei(balance, "ether") + " ETH");
+              $('#accountBalance').text(web3.fromWei(balance, "ether") + " ETH");
           }
-        })
-      }
-    });
+      })
+    }
   },
 
   getCoinbase: function() {
@@ -49,7 +53,7 @@ App = {
         $('#account').text(account);
         web3.eth.getBalance(account, function(err, balance) {
           if(err === null) {
-            App.coinbase_amount = web3.fromWei(balance, "ether");
+            App.coinbase_amount = web3.fromWei(balance, "ether").toNumber();
           }
         })
       }
@@ -57,21 +61,93 @@ App = {
   },
 
   register: function() {
-    let address = "";
     let email = $('#inputEmail');
     let fname = $('#inputFname');
     let lname = $('#inputLname');
     let password = $('#inputPassword');
+    let btnRegister = $('#btnRegister');
     if(email.val() == "" || fname.val() == "" || lname.val() == "" || password.val() == ""){
+      toastr.error('Please fill all fields');
       return false;
     }
-    web3.personal.newAccount(password, function(err, data) {
+    btnRegister.attr("disabled", 'disabled');
+    web3.personal.newAccount("pass@123", function(err, data) {
+      let address = data;
       if(err === null) {
-        console.log(data);
+        let postData = {
+          email: email.val(),
+          fname: fname.val(),
+          lname: lname.val(),
+          password: password.val(),
+          address: data
+        }
+          $.ajax({
+              method: "POST",
+              url: App.hostname() + "/register",
+              data: postData,
+              success: function (data) {
+                console.log(data)
+                if(data.status == "success"){
+                  web3.eth.sendTransaction({from:App.coinbase, to:address, value: web3.toWei(5, "ether")}, function(err, result) {
+                    if(err === null) {
+                        console.log(result)
+                    }
+                    else{
+                      console.log(err);
+                    }
+                    toastr.success("Success.");
+                    window.location.href = App.hostname();
+                  })
+                }else{
+                  toastr.error(data.data);
+                }
+                btnRegister.attr("disabled", false);
+              },
+              error: function (err) {
+                toastr.error('Error Registering');
+                btnRegister.attr("disabled", false);
+              }
+          });
       } else {
+        toastr.error('Error Registering');
+        btnRegister.attr("disabled", false);
         return false;
       }
     })
+  },
+
+  login: function() {
+    let email = $('#inputEmail');
+    let password = $('#inputPassword');
+    let btnLogin = $('#btnLogin');
+    if(email.val() == "" || password.val() == ""){
+        toastr.error('Please fill all fields');
+        return false;
+    }
+    btnLogin.attr("disabled", 'disabled');
+    let postData = {
+        email: email.val(),
+        password: password.val(),
+    }
+    $.ajax({
+        method: "POST",
+        url: App.hostname() + "/login",
+        data: postData,
+        success: function (data) {
+            console.log(data)
+            if(data.status == "success"){
+                toastr.success("Success.");
+                window.location.href = App.hostname();
+            }else{
+                toastr.error(data.data);
+            }
+            btnLogin.attr("disabled", false);
+        },
+        error: function (err) {
+            toastr.error('Error Registering');
+            btnLogin.attr("disabled", false);
+        }
+    });
   },
 
   initContract: function() {
@@ -129,15 +205,19 @@ App = {
       return false;
     }
 
-    App.contracts.ChainList.deployed().then(function(instance) {
-      return instance.sellArticle(_article_name, _description, _price, {
-        from: App.account,
-        gas: 500000
-      });
-    }).then(function(result) {
+    web3.personal.unlockAccount(App.account, "pass@123", 1000, function(err, result) {
+      console.log(result);
+      console.log(err);
+        App.contracts.ChainList.deployed().then(function(instance) {
+            return instance.sellArticle(_article_name, _description, _price, {
+                from: App.account,
+                gas: 500000
+            });
+        }).then(function(result) {
 
-    }).catch(function(err) {
-      console.error(err);
+        }).catch(function(err) {
+            console.error(err);
+        });
     });
   },
 
@@ -200,14 +280,19 @@ App = {
     // retrieve article Price
     var price = parseFloat($(event.target).data('value'));
     var articleID = parseFloat($(event.target).data('id'));
-    App.contracts.ChainList.deployed().then(function(instance) {
-      return instance.buyArticle(articleID, {
-        from: App.account,
-        value: web3.toWei(price, "ether"),
-        gas:500000
-      }).catch(function(error) {
-        console.error(error);
-      })
+
+    web3.personal.unlockAccount(App.account, "pass@123", 1000, function(err, result) {
+        console.log(result);
+        console.log(err);
+        App.contracts.ChainList.deployed().then(function (instance) {
+            return instance.buyArticle(articleID, {
+                from: App.account,
+                value: web3.toWei(price, "ether"),
+                gas: 500000
+            }).catch(function (error) {
+                console.error(error);
+            })
+        });
     });
   }
 };
