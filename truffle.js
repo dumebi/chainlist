@@ -7,11 +7,11 @@ module.exports = {
                port: 7545,
                network_id: "*" // Match any network id
           },
-          chainskills: {
+          blockchain: {
                host: "localhost",
                port: 8545,
                network_id: "4224",
-               gas: 47000000
+               gas: 4612388
           }
      }
 };
