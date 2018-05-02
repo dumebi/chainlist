@@ -142,4 +142,38 @@ router.post('/login', utils.notLoggedIn, function (req, res, next) {
     });
 });
 
+/**
+ * Upload the image file to Google Storage
+ * @param {File} file object that will be uploaded to Google Storage
+ */
+const uploadImageToStorage = (file, folder) => {
+    let prom = new Promise((resolve, reject) => {
+        if (!file) {
+            reject('No image file');
+        }
+        let newFileName = `/${folder}/${Date.now()}_${file.originalname}`;
+
+
+        let fileUpload = bucket.file(newFileName);
+
+        const blobStream = fileUpload.createWriteStream({
+            metadata: {
+                contentType: file.mimetype
+            }
+        });
+
+        blobStream.on('error', (error) => {
+            reject('Something is wrong! Unable to upload at the moment.');
+        });
+
+        blobStream.on('finish', () => {
+            const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${fileUpload.name.replace("/", "%2F")}?alt=media`;
+            resolve(url);
+        });
+
+        blobStream.end(file.buffer);
+    });
+    return prom;
+}
+
 module.exports = router;

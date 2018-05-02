@@ -11,6 +11,7 @@ contract Chainlist is Ownable{
     string name;
     string description;
     uint256 price;
+    string image_url;
   }
 
   // state variables
@@ -53,7 +54,7 @@ contract Chainlist is Ownable{
   }
 
   // sell an article
-  function sellArticle(string _name, string _description, uint256 _price) public {
+  function sellArticle(string _name, string _description, uint256 _price, string _image_url) public {
     /* seller = msg.sender;
     name = _name;
     description = _description;
@@ -68,7 +69,8 @@ contract Chainlist is Ownable{
       0x0,
       _name,
       _description,
-      _price
+      _price,
+      _image_url
       );
 
     LogSellArticle(articleCounter, msg.sender, _name, _price);
