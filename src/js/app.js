@@ -56,6 +56,7 @@ App = {
                 web3.eth.getBalance(account, function (err, balance) {
                     if (err === null) {
                         App.coinbase_amount = web3.fromWei(balance, "ether").toNumber();
+                        console.log(App.coinbase, App.coinbase_amount)
                     }
                 })
             }
@@ -175,6 +176,8 @@ App = {
             App.contracts.ChainList = TruffleContract(chainListArtifact);
             // set the provider for our contracts
             App.contracts.ChainList.setProvider(App.web3Provider);
+            console.log("web3 provider");
+            console.log(App.web3Provider);
             // listen to events
             App.listenToEvents();
             // retrieve the article from the contract
