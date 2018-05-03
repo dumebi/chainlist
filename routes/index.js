@@ -10,6 +10,25 @@ router.use('/', function (req, res, next) {
     next();
 });
 
+router.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 router.get('/', utils.loggedIn, function (req, res, next) {
     res.render('index');
 });
@@ -140,6 +159,10 @@ router.post('/login', utils.notLoggedIn, function (req, res, next) {
       console.log(err)
     return res.status(200).json({ status: 'failed', data: "User not found" });
     });
+});
+
+router.get('/api', function (req, res, next) {
+    console.log("gotten")
 });
 
 /**
