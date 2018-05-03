@@ -10,6 +10,7 @@ const session = require('express-session');
 let MongoStore = require('connect-mongo')(session);
 const User = require('./models/user');
 const utils = require('./utils/utils');
+const cors = require('cors')
 app = express();
 
 let MONGO_DB = "mongodb://dikejude49:dyke2010@ds155299.mlab.com:55299/blockchain";
@@ -39,7 +40,7 @@ app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
-
+app.use(cors())
 app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
