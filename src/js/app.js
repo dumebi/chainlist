@@ -19,7 +19,7 @@ App = {
         } else {
             //create a new provider and plug it directly into our local node
             // App.web3Provider = new Web3.providers.HttpProvider('https://159.89.119.189:8080');
-            App.web3Provider = new Web3.providers.HttpProvider('https://localhost:8545');
+            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
         }
         web3 = new Web3(App.web3Provider);
 
@@ -176,8 +176,6 @@ App = {
             App.contracts.ChainList = TruffleContract(chainListArtifact);
             // set the provider for our contracts
             App.contracts.ChainList.setProvider(App.web3Provider);
-            console.log("web3 provider");
-            console.log(App.web3Provider);
             // listen to events
             App.listenToEvents();
             // retrieve the article from the contract
