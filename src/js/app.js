@@ -18,7 +18,7 @@ App = {
             App.web3Provider = web3.currentProvider;
         } else {
             //create a new provider and plug it directly into our local node
-            App.web3Provider = new Web3.providers.HttpProvider('https://comflo.com:8545');
+            App.web3Provider = new Web3.providers.HttpProvider('https://127.0.0.1:8545');
             // App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
         }
         web3 = new Web3(App.web3Provider);
