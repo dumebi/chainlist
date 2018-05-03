@@ -37,7 +37,17 @@
         <entry file="file://$PROJECT_DIR$/src/js/app.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
-              <caret line="20" column="81" lean-forward="false" selection-start-line="20" selection-start-column="81" selection-end-line="20" selection-end-column="81" />
+              <caret line="20" column="87" lean-forward="false" selection-start-line="20" selection-start-column="87" selection-end-line="20" selection-end-column="87" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="truffle-contract.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/truffle-contract.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2220">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -98,16 +108,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="600">
               <caret line="40" column="34" lean-forward="false" selection-start-line="40" selection-start-column="34" selection-end-line="40" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="register.hbs" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/register.hbs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="136" lean-forward="false" selection-start-line="20" selection-start-column="136" selection-end-line="20" selection-end-column="136" />
               <folding />
             </state>
           </provider>
@@ -425,12 +425,12 @@
       <workItem from="1524568396899" duration="3861000" />
       <workItem from="1524597613416" duration="21868000" />
       <workItem from="1524701722772" duration="1452000" />
-      <workItem from="1525294981341" duration="6305000" />
+      <workItem from="1525294981341" duration="6410000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33486000" />
+    <option name="totallyTimeSpent" value="33591000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -652,10 +652,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/truffle-contract.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2220">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
-          <caret line="20" column="81" lean-forward="false" selection-start-line="20" selection-start-column="81" selection-end-line="20" selection-end-column="81" />
+          <caret line="20" column="87" lean-forward="false" selection-start-line="20" selection-start-column="87" selection-end-line="20" selection-end-column="87" />
           <folding />
         </state>
       </provider>
