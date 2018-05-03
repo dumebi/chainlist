@@ -10,6 +10,7 @@ App = {
         return App.initWeb3();
     },
 
+
     initWeb3: function () {
         // initialize web3
         if (typeof web3 !== 'undefined') {
