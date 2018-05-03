@@ -38,6 +38,8 @@ App = {
 
     displayAccountInfo: function () {
         // console.log(App);
+        toastr.clear();
+        toastr.info('Getting Accoint Info', {timeOut: 30000});
         if (App.account != 0) {
             $('#account').text(App.account);
             web3.eth.getBalance(App.account, function (err, balance) {
@@ -195,7 +197,6 @@ App = {
         }
         App.loading = true
         // refresh account information because the balance might have changed
-        toastr.info('Processing.....', {timeOut: 30000});
         App.displayAccountInfo();
 
         var chainListInstance;
