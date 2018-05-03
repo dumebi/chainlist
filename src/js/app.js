@@ -38,9 +38,9 @@ App = {
 
     displayAccountInfo: function () {
         // console.log(App);
-        toastr.clear();
-        toastr.info('Getting Accoint Info', {timeOut: 30000});
         if (App.account != 0) {
+            toastr.clear();
+            toastr.info('Getting Accoint Info', {timeOut: 30000});
             $('#account').text(App.account);
             web3.eth.getBalance(App.account, function (err, balance) {
                 if (err === null) {
