@@ -19,7 +19,7 @@ App = {
         } else {
             //create a new provider and plug it directly into our local node
             // App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
-            App.web3Provider = new Web3.providers.HttpProvider('https://159.89.119.189/geth/');
+            App.web3Provider = new Web3.providers.HttpProvider('https://159.89.119.189/cabaret/');
         }
         web3 = new Web3(App.web3Provider);
 
