@@ -17,7 +17,8 @@ App = {
             App.web3Provider = web3.currentProvider;
         } else {
             //create a new provider and plug it directly into our local node
-            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+            App.web3Provider = new Web3.providers.HttpProvider('http://159.89.119.189:8545');
+            // App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
         }
         web3 = new Web3(App.web3Provider);
 
@@ -168,7 +169,7 @@ App = {
     },
 
     initContract: function () {
-        $.getJSON('ChainList.json', function (chainListArtifact) {
+        $.getJSON('Chainlist.json', function (chainListArtifact) {
             // get the contract artifact file and use it to instantiate a truffle contract abstraction
             App.contracts.ChainList = TruffleContract(chainListArtifact);
             // set the provider for our contracts
