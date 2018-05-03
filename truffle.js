@@ -7,8 +7,14 @@ module.exports = {
                port: 7545,
                network_id: "*" // Match any network id
           },
-          blockchain: {
+          localtest: {
                host: "localhost",
+               port: 8545,
+               network_id: "4224",
+               gas: 4612388
+          },
+          blockchain: {
+               host: "159.89.119.189",
                port: 8545,
                network_id: "4224",
                gas: 4612388
