@@ -42,7 +42,12 @@ App = {
             $('#account').text(App.account);
             web3.eth.getBalance(App.account, function (err, balance) {
                 if (err === null) {
-                    $('#accountBalance').text(web3.fromWei(balance, "ether") + " ETH");
+                    if(web3.fromWei(balance, "ether") == 0){
+                        App.displayAccountInfo();
+                    } else {
+                        toastr.clear();
+                        $('#accountBalance').text(web3.fromWei(balance, "ether") + " ETH");
+                    }
                 }
             })
         }
@@ -190,6 +195,7 @@ App = {
         }
         App.loading = true
         // refresh account information because the balance might have changed
+        toastr.info('Processing.....', {timeOut: 30000});
         App.displayAccountInfo();
 
         var chainListInstance;
@@ -232,7 +238,7 @@ App = {
         };
         let ref = firebase.storage().ref();
         const task = ref.child(name).put(file, metadata);
-        toastr.info('Processing.....', {timeOut: 10000});
+        toastr.info('Processing.....', {timeOut: 30000});
         task.then((snapshot) => {
             const _image_url = snapshot.downloadURL;
             console.log(_image_url);
