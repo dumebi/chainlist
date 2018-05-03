@@ -39,7 +39,7 @@ App = {
     displayAccountInfo: function () {
         // console.log(App);
         if (App.account != 0) {
-            toastr.clear();
+            toastr.remove();
             toastr.info('Getting Accoint Info', {timeOut: 30000});
             $('#account').text(App.account);
             web3.eth.getBalance(App.account, function (err, balance) {
@@ -47,7 +47,7 @@ App = {
                     if(web3.fromWei(balance, "ether") == 0){
                         App.displayAccountInfo();
                     } else {
-                        toastr.clear();
+                        toastr.remove();
                         $('#accountBalance').text(web3.fromWei(balance, "ether") + " ETH");
                     }
                 }
