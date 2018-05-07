@@ -76,6 +76,28 @@ App = {
         });
     },
 
+    transfer: function() {
+        web3.eth.sendTransaction({
+            from: App.coinbase,
+            to: App.account,
+            value: web3.toWei(10, "ether")
+        }, function (err, result) {
+            if (err == null) {
+                console.log("sent money");
+                console.log(result)
+                console.log(err)
+                web3.eth.getBalance(App.account, function (err, balance) {
+                    if (err === null) {
+                        console.log(web3.fromWei(balance, "ether") + " ETH");
+                    }
+                })
+            }
+            else {
+                console.log(err);
+            }
+        })
+    },
+
     register: function () {
         let email = $('#inputEmail');
         let fname = $('#inputFname');
