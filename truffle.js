@@ -17,8 +17,7 @@ module.exports = {
                host: "159.89.119.189",
                port: 8545,
                network_id: "4224",
-               gas: 4612388,
-               from: "0x66dca672d5cc189ceba7d687d4792edf27a5338c"
+               gas: 4612388
           }
      }
 };
