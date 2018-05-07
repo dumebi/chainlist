@@ -50,6 +50,7 @@ App = {
         web3.eth.getBalance(App.account, function (err, balance) {
             if (err === null) {
                 if(web3.fromWei(balance, "ether") == 0){
+                    console.log(App.account, web3.fromWei(balance, "ether"));
                     App.getBalance();
                 } else {
                     console.log(web3.fromWei(balance, "ether"));
