@@ -76,7 +76,9 @@ App = {
     },
 
     transfer: function() {
-        web3.personal.unlockAccount(App.coinbase, "pass@123", 100000, function (err, result) {
+        web3.personal.unlockAccount(App.coinbase, "pass12345", 100000, function (err, result) {
+            console.log(result)
+            consol.log(err)
         web3.personal.unlockAccount(App.account, "pass@123", 100000, function (err, result) {
             web3.eth.sendTransaction({
                 from: App.coinbase,
