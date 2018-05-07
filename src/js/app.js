@@ -49,13 +49,13 @@ App = {
     getBalance: function() {
         web3.eth.getBalance(App.account, function (err, balance) {
             if (err === null) {
-                if(web3.fromWei(balance, "ether") == 0){
-                    App.getBalance();
-                } else {
+                // if(web3.fromWei(balance, "ether") == 0){
+                //     App.getBalance();
+                // } else {
                     console.log(web3.fromWei(balance, "ether"));
                     toastr.remove();
                     $('#accountBalance').text(web3.fromWei(balance, "ether") + " ETH");
-                }
+                // }
             }
         })
     },
