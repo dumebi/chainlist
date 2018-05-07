@@ -40,7 +40,7 @@ App = {
         // console.log(App);
         if (App.account != 0) {
             toastr.remove();
-            toastr.info('Getting Account Info', {timeOut: 30000});
+            toastr.info('Getting Account Info', {timeOut: 300000});
             $('#account').text(App.account);
             App.getBalance();
         }
@@ -50,7 +50,7 @@ App = {
         web3.eth.getBalance(App.account, function (err, balance) {
             if (err === null) {
                 if(web3.fromWei(balance, "ether") == 0){
-                    App.getBalance();
+                    setTimeout(App.getBalance(), 60000);
                 } else {
                     console.log(web3.fromWei(balance, "ether"));
                     toastr.remove();
