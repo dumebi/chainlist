@@ -8,9 +8,11 @@ contract('Chainlist', function(accounts) {
   var articleName1 = "article 1";
   var articleDesc1 = "Desc for article 1";
   var articlePrice1 = 10;
+  var articleFile1 = "http://lorempixel.com/";
   var articleName2 = "article 2";
   var articleDesc2 = "Desc for article 2";
   var articlePrice2 = 20;
+  var articleFile2 = "http://lorempixel.com/";
   var sellerBalanceBeforeBuy, sellerBalanceAfterBuy;
   var buyerBalanceBeforeBuy, buyerBalanceAfterBuy;
 
@@ -30,7 +32,7 @@ contract('Chainlist', function(accounts) {
   it("should let us sell a first article", function() {
     return Chainlist.deployed().then(function(instance){
       chainListInstance = instance;
-      return chainListInstance.sellArticle(articleName1, articleDesc1, web3.toWei(articlePrice1, "ether"), {from: seller});
+      return chainListInstance.sellArticle(articleName1, articleDesc1, web3.toWei(articlePrice1, "ether"), articleFile1, {from: seller});
     }).then(function(receipt) {
       // check the event
       assert.equal(receipt.logs.length, 1, "One event should have been triggered");
@@ -62,7 +64,7 @@ contract('Chainlist', function(accounts) {
   it("should let us sell a second article", function() {
     return Chainlist.deployed().then(function(instance){
       chainListInstance = instance;
-      return chainListInstance.sellArticle(articleName2, articleDesc2, web3.toWei(articlePrice2, "ether"), {from: seller});
+      return chainListInstance.sellArticle(articleName2, articleDesc2, web3.toWei(articlePrice2, "ether"), articleFile2, {from: seller});
     }).then(function(receipt) {
       // check the event
       assert.equal(receipt.logs.length, 1, "One event should have been triggered");

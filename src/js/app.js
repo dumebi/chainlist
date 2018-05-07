@@ -18,7 +18,7 @@ App = {
             App.web3Provider = web3.currentProvider;
         } else {
             //create a new provider and plug it directly into our local node
-            // App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+            //App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
             App.web3Provider = new Web3.providers.HttpProvider('http://159.89.119.189:8545');
         }
         web3 = new Web3(App.web3Provider);
@@ -42,6 +42,7 @@ App = {
             toastr.remove();
             toastr.info('Getting Account Info', {timeOut: 30000});
             $('#account').text(App.account);
+            App.getBalance();
         }
     },
 
@@ -51,6 +52,7 @@ App = {
                 if(web3.fromWei(balance, "ether") == 0){
                     App.getBalance();
                 } else {
+                    console.log(web3.fromWei(balance, "ether"));
                     toastr.remove();
                     $('#accountBalance').text(web3.fromWei(balance, "ether") + " ETH");
                 }

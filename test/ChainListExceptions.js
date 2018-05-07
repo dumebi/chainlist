@@ -8,6 +8,7 @@ contract('Chainlist', function(accounts) {
   var articleName1 = "article 1";
   var articleDesc1 = "Desc for article 1";
   var articlePrice1 = 10;
+  var articleFile1 = "http://lorempixel.com/";
   var sellerBalanceBeforeBuy, sellerBalanceAfterBuy;
   var buyerBalanceBeforeBuy, buyerBalanceAfterBuy;
 
@@ -30,7 +31,7 @@ contract('Chainlist', function(accounts) {
   it("should throw an exception if you try to buy an article that does not exist", function() {
     return Chainlist.deployed().then(function(instance){
       chainListInstance = instance;
-      return chainListInstance.sellArticle(articleName1, articleDesc1, web3.toWei(articlePrice1, "ether"), {from: seller})
+      return chainListInstance.sellArticle(articleName1, articleDesc1, web3.toWei(articlePrice1, "ether"), articleFile1, {from: seller})
     }).then(function(receipt) {
       return chainListInstance.buyArticle(2, {from: seller, value: web3.toWei(articlePrice1, "ether")})
     }).then(assert.fail)
