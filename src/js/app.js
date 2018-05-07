@@ -18,8 +18,8 @@ App = {
             App.web3Provider = web3.currentProvider;
         } else {
             //create a new provider and plug it directly into our local node
-            //App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
-            App.web3Provider = new Web3.providers.HttpProvider('http://159.89.119.189:8545');
+            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+            //App.web3Provider = new Web3.providers.HttpProvider('http://159.89.119.189:8545');
         }
         web3 = new Web3(App.web3Provider);
 
@@ -318,6 +318,7 @@ App = {
 
             instance.LogBuyArticle({}, {}).watch(function (error, event) {
                 if (!error) {
+                    $('#sellBtn').attr("disabled", false);
                     $("#events").append('<li class="list-group-item">' + event.args._buyer + ' bought ' + event.args._name + '</li>');
                 } else {
                     console.error(error);
@@ -331,6 +332,9 @@ App = {
     buyArticle: function () {
         event.preventDefault();
         // retrieve article Price
+        toastr.info('Processing.....', {timeOut: 30000});
+        $(event.target).attr("disabled", 'disabled');
+        $('#sellBtn').attr("disabled", 'disabled');
         var price = parseFloat($(event.target).data('value'));
         var articleID = parseFloat($(event.target).data('id'));
 

@@ -7,13 +7,13 @@ module.exports = {
                port: 7545,
                network_id: "*" // Match any network id
           },
-          localtest: {
+          comflo_network: {
                host: "localhost",
                port: 8545,
                network_id: "4224",
                gas: 4612388
           },
-          blockchain: {
+          comflo_server: {
                host: "159.89.119.189",
                port: 8545,
                network_id: "4224",

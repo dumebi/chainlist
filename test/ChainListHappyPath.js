@@ -5,6 +5,8 @@ contract('Chainlist', function(accounts) {
   var chainListInstance;
   var seller = accounts[1];
   var buyer = accounts[2];
+    console.log(seller)
+    console.log(buyer)
   var articleName1 = "article 1";
   var articleDesc1 = "Desc for article 1";
   var articlePrice1 = 10;

@@ -3,6 +3,7 @@ var Chainlist = artifacts.require("./Chainlist.sol");
 // test suite
 contract('Chainlist', function(accounts) {
   var chainListInstance;
+  console.log(accounts);
   var seller = accounts[1];
   var buyer = accounts[2];
   var articleName1 = "article 1";
