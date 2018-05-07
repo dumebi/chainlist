@@ -50,7 +50,6 @@ App = {
         web3.eth.getBalance(App.account, function (err, balance) {
             if (err === null) {
                 if(web3.fromWei(balance, "ether") == 0){
-                    console.log(App.account, web3.fromWei(balance, "ether"));
                     App.getBalance();
                 } else {
                     console.log(web3.fromWei(balance, "ether"));
@@ -77,25 +76,27 @@ App = {
     },
 
     transfer: function() {
-        web3.eth.sendTransaction({
-            from: App.coinbase,
-            to: App.account,
-            value: web3.toWei(10, "ether")
-        }, function (err, result) {
-            if (err == null) {
-                console.log("sent money");
-                console.log(result)
-                console.log(err)
-                web3.eth.getBalance(App.account, function (err, balance) {
-                    if (err === null) {
-                        console.log(web3.fromWei(balance, "ether") + " ETH");
-                    }
-                })
-            }
-            else {
-                console.log(err);
-            }
-        })
+        web3.personal.unlockAccount(address, "pass@123", 1000, function (err, result) {
+            web3.eth.sendTransaction({
+                from: App.coinbase,
+                to: App.account,
+                value: web3.toWei(10, "ether")
+            }, function (err, result) {
+                if (err == null) {
+                    console.log("sent money");
+                    console.log(result)
+                    console.log(err)
+                    web3.eth.getBalance(App.account, function (err, balance) {
+                        if (err === null) {
+                            console.log(web3.fromWei(balance, "ether") + " ETH");
+                        }
+                    })
+                }
+                else {
+                    console.log(err);
+                }
+            })
+        });
     },
 
     register: function () {
