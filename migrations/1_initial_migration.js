@@ -1,4 +1,10 @@
-var Chainlist = artifacts.require("./Chainlist.sol");
+var Migrations = artifacts.require("./Migrations.sol");
+
 module.exports = function(deployer) {
-    deployer.deploy(Chainlist);
+  deployer.deploy(Migrations);
 };
+//
+// var Migrations = artifacts.require("./Contract.sol");
+// module.exports = function(deployer) {
+//     deployer.deploy(Contract);
+// };
