@@ -1,5 +1,4 @@
-var Migrations = artifacts.require("./Migrations.sol");
-
+var Chainlist = artifacts.require("./Chainlist.sol");
 module.exports = function(deployer) {
-  deployer.deploy(Migrations);
+    deployer.deploy(Chainlist);
 };
