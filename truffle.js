@@ -15,7 +15,7 @@ module.exports = {
           },
           comflo_server: {
                host: "159.89.119.189",
-               port: 5001,
+               port: 7545,
                network_id: "*",
                gas: 4612388
           }
